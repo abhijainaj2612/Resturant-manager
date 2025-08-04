@@ -178,6 +178,7 @@ function Admin() {
               <th className="p-3 border">Phone</th>
               <th className="p-3 border">Address</th>
               <th className="p-3 border">Type</th>
+              <th className="p-3 border">Ordered Items</th>
               <th className="p-3 border">Status</th>
               <th className="p-3 border">Amount</th>
               <th className="p-3 border">Date & Time</th>
@@ -191,6 +192,15 @@ function Admin() {
                 <td className="p-3 border">{order.formData.phone || "-"}</td>
                 <td className="p-3 border">{order.formData.address || "-"}</td>
                 <td className="p-3 border">{order.orderType}</td>
+                <td className="p-3 border text-left">
+                  <ul className="list-disc list-inside space-y-1">
+                    {order.items.map((item, idx) => (
+                      <li key={idx}>
+                        {item.name} – ₹{item.price}
+                      </li>
+                    ))}
+                  </ul>
+                </td>
                 <td className="p-3 border capitalize">{order.status}</td>
                 <td className="p-3 border">₹{order.totalAmount}</td>
                 <td className="p-3 border">{new Date(order.createdAt).toLocaleString()}</td>
@@ -222,3 +232,4 @@ function Admin() {
 }
 
 export default Admin;
+

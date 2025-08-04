@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import axios from 'axios';
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
@@ -124,9 +124,9 @@ const menu = {
     { name: "Rasgulla With Rabdi", price: 50 },
   ],
   Thali: [
-    {name: "Normal Thali (Dal, Sabji, 4 Roti, Rice,Salad, Papad, Achar)", price: 70 },
-    {name: "Special Thali (Mix Veg, Paneer Sabji, Dal, 4 Roti, Jeera Rice, Salad, Raita, Papad, Achar)", price: 110 },
-    {name: "Deluxe Thali (Sev Tamatar, Paneer Sabji, Dal Tadka, Veg Pulao, Sweet, 4 Roti, Salad, Raita, Papad, Achar) ", price: 150 },
+    { name: "Normal Thali (Dal, Sabji, 4 Roti, Rice,Salad, Papad, Achar)", price: 70 },
+    { name: "Special Thali (Mix Veg, Paneer Sabji, Dal, 4 Roti, Jeera Rice, Salad, Raita, Papad, Achar)", price: 110 },
+    { name: "Deluxe Thali (Sev Tamatar, Paneer Sabji, Dal Tadka, Veg Pulao, Sweet, 4 Roti, Salad, Raita, Papad, Achar) ", price: 150 },
   ],
 };
 
@@ -138,6 +138,15 @@ function Home() {
   const [orderType, setOrderType] = useState("");
   const [formData, setFormData] = useState({ name: "", phone: "", address: "" });
   const navigate = useNavigate();
+  const targetRef = useRef(null);
+  const bottomRef = useRef(null);
+
+  const handleScroll = () => {
+    setOrderStep(true);
+    setTimeout(() => {
+      targetRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
 
   const handleCheckbox = (item) => {
     const exists = selected.find((i) => i.name === item.name);
@@ -153,6 +162,10 @@ function Home() {
   const handleOrderType = (e) => {
     setOrderType(e.target.value);
     setFormData({ name: "", phone: "", address: "" });
+
+    setTimeout(() => {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   const handleInput = (e) => {
@@ -219,10 +232,10 @@ function Home() {
                 </ul>
               </div>
             ))}
-          </div>
 
           {/* Order Summary Section */}
-          <div className="lg:w-1/3 border-l lg:pl-6 flex flex-col justify-between max-h-[80vh]">
+            <div ref={targetRef} className={`w-full lg:w-1/3 lg:border-l lg:pl-6 flex flex-col justify-between overflow-y-auto max-h-full bg-white rounded-xl p-4 shadow
+    ${selected.length > 0 && !orderStep ? 'hidden sm:flex' : 'flex'}`}>
             {!orderStep ? (
               <div className="flex flex-col justify-between h-full">
                 <div>
@@ -304,20 +317,41 @@ function Home() {
                         required
                       ></textarea>
                     )}
-                    <button
+                    <button 
                       className="bg-blue-600 hover:bg-blue-700 transition text-white px-4 py-2 rounded w-full font-medium"
                       onClick={handleConfirmOrder}
                     >
                       Confirm Order
                     </button>
+                        <div ref={bottomRef} className="h-1" />
                   </div>
                 )}
               </div>
             )}
           </div>
+          </div>
         </div>
       </div>
 
+      {/* Fixed Bottom Order Summary Card for Mobile */}
+      {selected.length > 0 && !orderStep && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-md p-4 flex justify-between items-center sm:hidden z-50">
+          <div>
+            <p className="text-base font-semibold text-gray-800">Items: {selected.length}</p>
+            <p className="text-sm text-gray-600">Total: ₹{totalAmount}</p>
+          </div>
+          <button
+            onClick={handleScroll}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-medium"
+          >
+            Place Order
+          </button>
+        </div>
+      )}
+
+
+
+        
     </>
   );
 }
