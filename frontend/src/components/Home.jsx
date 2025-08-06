@@ -181,6 +181,7 @@ function Home() {
         totalAmount
       });
       alert("Order submitted successfully!");
+      window.location.reload();
     } catch (error) {
       alert("Failed to submit order.");
       console.error(error);
@@ -232,10 +233,10 @@ function Home() {
                 </ul>
               </div>
             ))}
-
+          </div>
           {/* Order Summary Section */}
             <div ref={targetRef} className={`w-full lg:w-1/3 lg:border-l lg:pl-6 flex flex-col justify-between overflow-y-auto max-h-full bg-white rounded-xl p-4 shadow
-    ${selected.length > 0 && !orderStep ? 'hidden sm:flex' : 'flex'}`}>
+            ${selected.length > 0 && !orderStep ? 'hidden sm:flex' : 'flex'}`}>
             {!orderStep ? (
               <div className="flex flex-col justify-between h-full">
                 <div>
@@ -328,7 +329,6 @@ function Home() {
                 )}
               </div>
             )}
-          </div>
           </div>
         </div>
       </div>
